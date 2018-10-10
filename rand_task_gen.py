@@ -112,7 +112,7 @@ def get_task_dag(config_yml,dag_path_plot):
 
 #========================================================================================
 def get_task_to_dag(dag):
-	f = open("Dag.txt", 'w')
+	f = open("configuration.txt", 'w')
 	total_node = len(dag.nodes())
 	f.write(str(total_node) + "\n")
 	task_dict = {}
@@ -187,7 +187,7 @@ def get_task_to_dummy_app(dag):
 		
 		f.close()
 
-		
+# This function is not used in current version. But keep it for further uses
 def get_task_to_generate_file(dag):
 	if "test" not in os.listdir():
 		os.mkdir("test")
@@ -214,5 +214,5 @@ if __name__ == '__main__':
 	get_task_to_dag(dag)	# question1
 	get_task_to_communication(dag) # question2
 	get_task_to_dummy_app(dag) # question3
-	get_task_to_generate_file(dag) # question4
+	#get_task_to_generate_file(dag) # question4
 	print('done')
