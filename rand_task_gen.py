@@ -1,8 +1,3 @@
-__author__ = "Diyi Hu, Jiatong Wang, Bhaskar Krishnamachari"
-__copyright__ = "Copyright (c) 2018, Autonomous Networks Research Group. All rights reserved."
-__license__ = "GPL"
-__version__ = "1.0"
-
 #import scipy.sparse
 import argparse
 import numpy as np
@@ -117,24 +112,23 @@ def get_task_dag(config_yml,dag_path_plot):
 
 #========================================================================================
 def get_task_to_dag(dag):
-	f = open("Dag.txt",'w')
+	f = open("Dag.txt", 'w')
 	total_node = len(dag.nodes())
-	f.write(str(total_node)+"\n")
-	task_dict ={}
+	f.write(str(total_node) + "\n")
+	task_dict = {}
 	for j in dag.nodes():
 		task_dict[j] = 0
-	for e0,e1 in dag.edges():
+	for e0, e1 in dag.edges():
 		if e1 in task_dict.keys():
-			task_dict[e1] +=1
-	
-	
+			task_dict[e1] += 1
+
 	for i in dag.nodes():
-		f.write("task"+i+ " ")
-		f.write(str(task_dict[i])+" ")
+		f.write("task" + i + " ")
+		f.write(str(task_dict[i]) + " ")
 		f.write("true ")
-		for e0,e1 in dag.edges():
+		for e0, e1 in dag.edges():
 			if i == e0:
-				f.write("task"+e1+" ")
+				f.write("task" + e1 + " ")
 		if int(i) == total_node - 1:
 			f.write("home")
 
@@ -156,14 +150,41 @@ def get_task_to_communication(dag):
 def get_task_to_dummy_app(dag):
 	if "dummy_app" not in os.listdir():
 		os.mkdir("dummy_app")
+	
 	for n,d in dag.nodes(data=True):
 		filename = "task"+n+".py"
 		f=open("./dummy_app/"+filename,'w')
+		f.write("import os\n")
 		f.write("import time\n")
-		f.write("execution_time = "+str(round(d['comp'],1))+"\n")
-		f.write("timeout = time.time() + execution_time\n")
-		f.write("while time.time() < timeout:\n")
-		f.write("\t1+1")
+		f.write("import shutil\n")
+		
+		f.write("\n")
+		f.write("def task(filename,pathin,pathout):\n")
+		f.write("\texecution_time = "+str(round(d['comp'],1))+"\n")
+		f.write("\ttimeout = time.time() + execution_time\n")
+		f.write("\twhile time.time() < timeout:\n")
+		f.write("\t\t1+1\n")
+		
+		f.write("\tfile_name = filename.split('.')[0]\n")
+		f.write("\toutput1 = ''\n")
+		f.write("\n")
+		f.write("\tfor i in range(30):\n")
+		f.write("\t\toutput1 = file_name +'_'+str(i)+'.txt'\n")
+		f.write("\t\tif(not os.path.exists(os.path.join(pathout,output1))):\n")
+		f.write("\t\t\tbreak\n")
+		f.write("\n")
+		f.write("\tinput_path = os.path.join(pathin,filename)\n")
+		f.write("\toutput_path = os.path.join(pathout,output1)\n")
+		f.write("\n")
+		f.write("\tshutil.copyfile(input_path,output_path)\n")
+		f.write("\n")
+		f.write("\treturn [output_path]\n")
+		
+		f.write("\n")
+		f.write("def main():\n")
+		f.write("\tpass\n")
+		
+		
 		f.close()
 
 		
@@ -176,7 +197,7 @@ def get_task_to_generate_file(dag):
 		s='1'*int(d['data']*1024)
 		f.write(s)
 		f.close()
-
+		
 #===================================================================================
 
 if __name__ == '__main__':
