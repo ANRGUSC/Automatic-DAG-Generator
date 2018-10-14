@@ -9,6 +9,7 @@ from networkx.drawing.nx_agraph import graphviz_layout
 import pylab as plt
 import yaml
 import os
+import json
 
 EPSILON = 1e-2
 
@@ -17,11 +18,43 @@ def parse_args():
 	parser.add_argument("--conf",required=True,type=str,help='yaml file specifying task_dag generation parameters')
 	return parser.parse_args()
 
+def random_list(depth,total_num,width_min,width_max):
+    list_t = []
+    if total_num>= (depth-2)*width_min+2 and total_num<=(depth-2)*width_max+2:
+        list_t.append(1)
+        for i in range(depth-2):
+            list_t.append(2)
+        list_t.append(1)
+        #print(list_t)
+        for i in range(total_num-sum(list_t)+2):
+            while True:
+                tmp = random.randint(1,len(list_t)-2)
+                if list_t[tmp]+1 > 4:
+                    pass
+                else:
+                    list_t[tmp] = list_t[tmp] + 1
+                    break
+    else:
+        list_t.append(1)
+        while True:
+            t = random.randint(width_min,width_max)
+            if (sum(list_t)-1+t)<total_num:
+                list_t.append(t)
+            elif  total_num -(sum(list_t)-1) >=width_min and total_num -(sum(list_t)-1)<=width_max :
+                list_t.append(total_num -(sum(list_t)-1))
+                break
+            else:
+                pass
+        list_t.append(1)
+    return list_t
 
-
-def gen_task_nodes(depth,width_min,width_max):
-	num_levels = depth+2		# 2: 1 for entry task, 1 for exit task
-	num_nodes_per_level = np.array([random.randint(width_min,width_max) for i in range(num_levels)])
+def gen_task_nodes(depth,total_num,width_min,width_max):
+	#num_levels = depth+2		# 2: 1 for entry task, 1 for exit task
+	num_list = random_list(depth+2,total_num,width_min,width_max)
+	print(num_list)
+	num_levels = len(num_list)
+	num_nodes_per_level = np.array(num_list)
+	#num_nodes_per_level = np.array([random.randint(width_min,width_max) for i in range(num_levels)])
 	num_nodes_per_level[0] = 1.
 	num_nodes_per_level[-1] = 1.
 	num_nodes = num_nodes_per_level.sum()
@@ -95,7 +128,7 @@ def get_task_dag(config_yml,dag_path_plot):
 		config = yaml.load(f_config)
 	#--- generate task graph ---
 
-	task_per_level,level_per_task = gen_task_nodes(config['depth'],config['width_min'],config['width_max'])
+	task_per_level,level_per_task = gen_task_nodes(config['depth'],config['total_num'],config['width_min'],config['width_max'])
 	edges,adj_list_top_down,adj_list_down_top = gen_task_links(config['deg_mu'],config['deg_sigma'],task_per_level,level_per_task)
 	task_comp,link_comm = gen_attr(np.arange(len(level_per_task)),edges,config['ccr'],config['comp_mu'],config['comp_sigma'],config['link_comm_sigma'])
 	edge_d = [(e[0],e[1],{'data':link_comm[i]}) for i,e in enumerate(edges)]
@@ -118,21 +151,32 @@ def get_task_to_dag(dag):
 	task_dict = {}
 	for j in dag.nodes():
 		task_dict[j] = 0
+	task_dict['0'] = 1
 	for e0, e1 in dag.edges():
 		if e1 in task_dict.keys():
 			task_dict[e1] += 1
 
+	data = dict()
 	for i in dag.nodes():
-		f.write("task" + i + " ")
-		f.write(str(task_dict[i]) + " ")
-		f.write("true ")
+		#f.write("task" + i + " ")
+		if i not in data.keys():
+			data[i] = ""
+		#f.write(str(task_dict[i]) + " ")
+		data[i] += str(task_dict[i]) + " "
+		#f.write("true ")
+		data[i] += "true "
 		for e0, e1 in dag.edges():
 			if i == e0:
-				f.write("task" + e1 + " ")
+				#f.write("task" + e1 + " ")
+				data[i] +="task" + e1 + " "
 		if int(i) == total_node - 1:
-			f.write("home")
-
-		f.write("\n")
+			#f.write("home")
+			data[i] += "home"
+		#f.write("\n")
+	for i in range(len(data)):
+		f.write("task" + str(i) + " ")
+		f.write(data[str(i)])
+		f.write('\n')
 
 	f.close()
 
@@ -157,6 +201,7 @@ def get_task_to_dummy_app(dag):
 		f.write("import os\n")
 		f.write("import time\n")
 		f.write("import shutil\n")
+		f.write("import uuid\n")
 		
 		f.write("\n")
 		f.write("def task(filename,pathin,pathout):\n")
@@ -166,13 +211,9 @@ def get_task_to_dummy_app(dag):
 		f.write("\t\t1+1\n")
 		
 		f.write("\tfile_name = filename.split('.')[0]\n")
-		f.write("\toutput1 = ''\n")
+		f.write("\toutput1 = file_name +'_'+str(uuid.uuid1())+'.txt'\n")
 		f.write("\n")
-		f.write("\tfor i in range(30):\n")
-		f.write("\t\toutput1 = file_name +'_'+str(i)+'.txt'\n")
-		f.write("\t\tif(not os.path.exists(os.path.join(pathout,output1))):\n")
-		f.write("\t\t\tbreak\n")
-		f.write("\n")
+
 		f.write("\tinput_path = os.path.join(pathin,filename)\n")
 		f.write("\toutput_path = os.path.join(pathout,output1)\n")
 		f.write("\n")
@@ -182,7 +223,11 @@ def get_task_to_dummy_app(dag):
 		
 		f.write("\n")
 		f.write("def main():\n")
-		f.write("\tpass\n")
+		f.write("\tfilelist = '1botnet.ipsum'\n")
+		f.write("\toutpath = os.path.join(os.path.dirname(__file__), 'sample_input/')\n")
+		f.write("\toutfile = task(filelist, outpath, outpath)\n")
+		f.write("\treturn outfile\n")
+
 		
 		
 		f.close()
@@ -200,6 +245,17 @@ def get_task_to_generate_file(dag):
 		
 #===================================================================================
 
+def get_task_to_json(dag):
+	f = open("config.json", 'w')
+	taskname_map = dict()
+	exec_profiler = dict()
+	for i in dag.nodes():
+		taskname_map["task"+i] = ["task"+i,True]
+		exec_profiler["task"+i] = True
+	final_json = {"taskname_map":taskname_map,"exec_profiler":exec_profiler}
+	f.write(json.dumps(final_json,indent = 2))
+	f.close()
+
 if __name__ == '__main__':
 	args = parse_args()
 	#dag_path_plot="D:/"
@@ -215,4 +271,5 @@ if __name__ == '__main__':
 	get_task_to_communication(dag) # question2
 	get_task_to_dummy_app(dag) # question3
 	#get_task_to_generate_file(dag) # question4
+	get_task_to_json(dag)
 	print('done')
