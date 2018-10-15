@@ -4,7 +4,7 @@ Automatic DAG Generator is customized for Jupiter Orchestrator (available here: 
 
 ## User Instructions
 
-`rand_task_gen.py` will work with `task_config.yml` to generate a dummay application used for Jupiter. 
+`rand_task_gen.py` will work with `task_config.yml` to generate a dummy application used for Jupiter. 
 
 ### task_config.yml
 
