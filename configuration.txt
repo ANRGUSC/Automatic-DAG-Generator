@@ -1,19 +1,7 @@
-18
-task9 5 true task11 task13 task12 
-task17 4 true home
-task1 1 true task8 task6 
-task5 2 true task9 task11 task7 task8 
-task2 1 true task9 task5 task3 task6 
-task13 2 true task17 task15 task14 task16 
-task8 2 true task11 task13 task12 task10 
-task0 0 true task3 task5 task1 task2 task4 task6 
-task14 2 true task17 
-task4 1 true task9 
-task6 3 true task9 task7 task10 
-task11 4 true task15 task16 task12 
-task16 4 true task17 
-task12 4 true task16 task14 
-task10 3 true task15 task16 
-task3 2 true task9 task7 
-task15 3 true task17 
-task7 3 true task11 task12 task10 
+6
+task0 1 true task1 task2 task3 
+task1 1 true task3 task5 task4 
+task2 1 true task3 task5 task4 
+task3 3 true task5 
+task4 2 true task5 
+task5 4 true home

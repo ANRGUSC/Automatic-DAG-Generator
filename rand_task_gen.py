@@ -191,46 +191,81 @@ def get_task_to_communication(dag):
 		f.write("}\n")
 	f.close()
 	
-def get_task_to_dummy_app(dag):
+def get_task_to_dummy_app():
 	if "dummy_app" not in os.listdir():
 		os.mkdir("dummy_app")
-	
-	for n,d in dag.nodes(data=True):
-		filename = "task"+n+".py"
-		f=open("./dummy_app/"+filename,'w')
-		f.write("import os\n")
-		f.write("import time\n")
-		f.write("import shutil\n")
-		f.write("import uuid\n")
-		
-		f.write("\n")
-		f.write("def task(filename,pathin,pathout):\n")
-		f.write("\texecution_time = "+str(round(d['comp'],1))+"\n")
-		f.write("\ttimeout = time.time() + execution_time\n")
-		f.write("\twhile time.time() < timeout:\n")
-		f.write("\t\t1+1\n")
-		
-		f.write("\tfile_name = filename.split('.')[0]\n")
-		f.write("\toutput1 = file_name +'_'+str(uuid.uuid1())+'.txt'\n")
-		f.write("\n")
+	f = open("configuration.txt", 'r')
+	total_line = f.readlines()
+	del total_line[0]
+	f.close()
+	for i in range(len(total_line)):
+		tmp = total_line[i].split(' ')
+		filename = tmp[0] + ".py"
+		num = int(tmp[1])
+		if num == 1:
+			f=open("./dummy_app/"+filename,'w')
+			f.write("import os\n")
+			f.write("import time\n")
+			f.write("import shutil\n")
+			f.write("import uuid\n")
+			
+			f.write("\n")
+			f.write("def task(filename,pathin,pathout):\n")
+			f.write("\texecution_time = 1.1\n")
+			f.write("\ttimeout = time.time() + execution_time\n")
+			f.write("\twhile time.time() < timeout:\n")
+			f.write("\t\t1+1\n")
+			
+			f.write("\tfile_name = filename.split('.')[0]\n")
+			f.write("\toutput1 = file_name +'_'+str(uuid.uuid1())+'.txt'\n")
+			f.write("\n")
 
-		f.write("\tinput_path = os.path.join(pathin,filename)\n")
-		f.write("\toutput_path = os.path.join(pathout,output1)\n")
-		f.write("\n")
-		f.write("\tshutil.copyfile(input_path,output_path)\n")
-		f.write("\n")
-		f.write("\treturn [output_path]\n")
-		
-		f.write("\n")
-		f.write("def main():\n")
-		f.write("\tfilelist = '1botnet.ipsum'\n")
-		f.write("\toutpath = os.path.join(os.path.dirname(__file__), 'sample_input/')\n")
-		f.write("\toutfile = task(filelist, outpath, outpath)\n")
-		f.write("\treturn outfile\n")
+			f.write("\tinput_path = os.path.join(pathin,filename)\n")
+			f.write("\toutput_path = os.path.join(pathout,output1)\n")
+			f.write("\n")
+			f.write("\tshutil.copyfile(input_path,output_path)\n")
+			f.write("\n")
+			f.write("\treturn [output_path]\n")
+			
+			f.write("\n")
+			f.write("def main():\n")
+			f.write("\tfilelist = '1botnet.ipsum'\n")
+			f.write("\toutpath = os.path.join(os.path.dirname(__file__), 'sample_input/')\n")
+			f.write("\toutfile = task(filelist, outpath, outpath)\n")
+			f.write("\treturn outfile\n")
+			f.close()
+		elif num >1:
+			f=open("./dummy_app/"+filename,'w')
+			f.write("import os\n")
+			f.write("import time\n")
+			f.write("import shutil\n")
+			f.write("import uuid\n")
+			
+			f.write("\n")
+			f.write("def task(filename,pathin,pathout):\n")
+			f.write("\texecution_time = 1.1\n")
+			f.write("\ttimeout = time.time() + execution_time\n")
+			f.write("\twhile time.time() < timeout:\n")
+			f.write("\t\t1+1\n")
+			
+			f.write("\tfile_name = filename[0].split('.')[0]\n")
+			f.write("\toutput1 = file_name +'_'+str(uuid.uuid1())+'.txt'\n")
+			f.write("\n")
 
-		
-		
-		f.close()
+			f.write("\tinput_path = os.path.join(pathin,filename[0])\n")
+			f.write("\toutput_path = os.path.join(pathout,output1)\n")
+			f.write("\n")
+			f.write("\tshutil.copyfile(input_path,output_path)\n")
+			f.write("\n")
+			f.write("\treturn [output_path]\n")
+			
+			f.write("\n")
+			f.write("def main():\n")
+			f.write("\tfilelist = ['1botnet.ipsum']\n")
+			f.write("\toutpath = os.path.join(os.path.dirname(__file__), 'sample_input/')\n")
+			f.write("\toutfile = task(filelist, outpath, outpath)\n")
+			f.write("\treturn outfile\n")
+			f.close()
 
 # This function is not used in current version. But keep it for further uses
 def get_task_to_generate_file(dag):
@@ -269,7 +304,7 @@ if __name__ == '__main__':
 	#plot_dag(dag)
 	get_task_to_dag(dag)	# question1
 	get_task_to_communication(dag) # question2
-	get_task_to_dummy_app(dag) # question3
+	get_task_to_dummy_app() # question3
 	#get_task_to_generate_file(dag) # question4
 	get_task_to_json(dag)
 	print('done')
