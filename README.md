@@ -17,7 +17,7 @@ If you want to create a total 6 level DAG, you should put `depth: 4`.
 parametes per level.
 
 `total_num` is used for specify a total number of tasks in your DAG. For example, if you want to generate a total 10 tasks in the DAG including the beginning and the last tasks,
-you should put `total_num: 8` , which 8 comes from (10 - 2).
+you should put `total_num: 8` , which 8 comes from (10 - 2). If there is a conflict between `total_num` and other parametes, the DAG will be generated with the first priority of `total_num`.
 
 ### rand_task_gen.py
 
