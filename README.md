@@ -4,7 +4,7 @@ Automatic DAG Generator is customized for Jupiter Orchestrator (available here: 
 
 ## User Instructions
 
-`rand_task_gen.py` will work with `task_config.yml` to generate a dummay application used for Jupiter. 
+`*rand_task_gen.py*` will work with `task_config.yml` to generate a dummay application used for Jupiter. 
 
 ### task_config.yml
 
@@ -23,11 +23,11 @@ you should put `total_num: 8` , which 8 comes from (10 - 2).
 
 To run this script, you should set `--conf task_config.yml` as the parameter. It will generate the files below:
 
-..*dummy_app/scripts -- scripts used in app_specific_files
-..*config.json -- used along with dummy_app/scipts
-..*configuration.txt -- used in CIRCE
-..*communication.txt -- NOT used for Jupiter, but for users to track tasks relations
-..*dag.png
+..* dummy_app/scripts -- scripts used in app_specific_files
+..* config.json -- used along with dummy_app/scipts
+..* configuration.txt -- used in CIRCE
+..* communication.txt -- NOT used for Jupiter, but for users to track tasks relations
+..* dag.png
 
 You should also create a `sample_input/` folder and have some input files there. More details please follow the instructions on how to use Jupiter at [http://jupiter.readthedocs.io/].
 
