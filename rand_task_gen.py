@@ -1,11 +1,19 @@
-#import scipy.sparse
+"""
+Top level config file (leave this file at the root directory). ``import config`` on the top of your file to include the global information included here.
+
+"""
+__author__ = "Diyi Hu, Jiatong Wang, Quynh Nguyen, Bhaskar Krishnamachari"
+__copyright__ = "Copyright (c) 2018, Autonomous Networks Research Group. All rights reserved."
+__license__ = "GPL"
+__version__ = "1.0"
+
+
 import argparse
 import numpy as np
 import random
 from functools import reduce
 import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
-#from networkx.drawing.layout import rescale_layout
 import pylab as plt
 import yaml
 import os
@@ -143,7 +151,7 @@ def get_task_dag(config_yml,dag_path_plot):
 	
 	return dag
 
-#========================================================================================
+#Generate configuration.txt
 def get_task_to_dag(dag):
 	f = open("configuration.txt", 'w')
 	total_node = len(dag.nodes())
@@ -158,21 +166,15 @@ def get_task_to_dag(dag):
 
 	data = dict()
 	for i in dag.nodes():
-		#f.write("task" + i + " ")
 		if i not in data.keys():
 			data[i] = ""
-		#f.write(str(task_dict[i]) + " ")
 		data[i] += str(task_dict[i]) + " "
-		#f.write("true ")
 		data[i] += "true "
 		for e0, e1 in dag.edges():
 			if i == e0:
-				#f.write("task" + e1 + " ")
 				data[i] +="task" + e1 + " "
 		if int(i) == total_node - 1:
-			#f.write("home")
 			data[i] += "home"
-		#f.write("\n")
 	for i in range(len(data)):
 		f.write("task" + str(i) + " ")
 		f.write(data[str(i)])
@@ -190,7 +192,8 @@ def get_task_to_communication(dag):
 				f.write('"task"'+e1+':"'+str(round(d['data'],2))+'KB",')
 		f.write("}\n")
 	f.close()
-	
+
+#Generate dummy scripts
 def get_task_to_dummy_app():
 	if "dummy_app" not in os.listdir():
 		os.mkdir("dummy_app")
@@ -277,8 +280,7 @@ def get_task_to_generate_file(dag):
 		s='1'*int(d['data']*1024)
 		f.write(s)
 		f.close()
-		
-#===================================================================================
+
 
 def get_task_to_json(dag):
 	f = open("config.json", 'w')
@@ -293,18 +295,11 @@ def get_task_to_json(dag):
 
 if __name__ == '__main__':
 	args = parse_args()
-	#dag_path_plot="D:/"
 	dag = get_task_dag(args.conf,"dag.png")
-	#print(dag.node['0'])
-	#for e0,e1,d in dag.edges(data=True):
-		#print(e0,e1,d)
-	#nx.draw(dag)
-	#plt.savefig("test.png")
-	#plt.show()
-	#plot_dag(dag)
-	get_task_to_dag(dag)	# question1
-	get_task_to_communication(dag) # question2
-	get_task_to_dummy_app() # question3
-	#get_task_to_generate_file(dag) # question4
+
+	get_task_to_dag(dag)
+	get_task_to_communication(dag)
+	get_task_to_dummy_app()
+	#get_task_to_generate_file(dag)
 	get_task_to_json(dag)
 	print('done')
