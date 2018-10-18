@@ -184,7 +184,6 @@ def get_task_to_dag(dag):
 
 def get_task_to_communication(dag):
 	f = open("communication.txt",'w')
-	
 	for i in dag.nodes():
 		f.write("task"+i+ "\t{")
 		for e0,e1,d in dag.edges(data=True):
@@ -195,6 +194,7 @@ def get_task_to_communication(dag):
 
 #Generate dummy scripts
 def get_task_to_dummy_app():
+	sorted_list = sorted(dag.nodes(data=True), key=lambda x: x[0], reverse=False)
 	if "dummy_app" not in os.listdir():
 		os.mkdir("dummy_app")
 	f = open("configuration.txt", 'r')
@@ -206,19 +206,19 @@ def get_task_to_dummy_app():
 		filename = tmp[0] + ".py"
 		num = int(tmp[1])
 		if num == 1:
-			f=open("./dummy_app/"+filename,'w')
+			f = open("./dummy_app/" + filename, 'w')
 			f.write("import os\n")
 			f.write("import time\n")
 			f.write("import shutil\n")
 			f.write("import uuid\n")
-			
+
 			f.write("\n")
 			f.write("def task(filename,pathin,pathout):\n")
-			f.write("\texecution_time = 1.1\n")
+			f.write("\texecution_time = " + str(round(sorted_list[i][1]['comp'], 1)) + "\n")
 			f.write("\ttimeout = time.time() + execution_time\n")
 			f.write("\twhile time.time() < timeout:\n")
 			f.write("\t\t1+1\n")
-			
+
 			f.write("\tfile_name = filename.split('.')[0]\n")
 			f.write("\toutput1 = file_name +'_'+str(uuid.uuid1())+'.txt'\n")
 			f.write("\n")
@@ -229,7 +229,7 @@ def get_task_to_dummy_app():
 			f.write("\tshutil.copyfile(input_path,output_path)\n")
 			f.write("\n")
 			f.write("\treturn [output_path]\n")
-			
+
 			f.write("\n")
 			f.write("def main():\n")
 			f.write("\tfilelist = '1botnet.ipsum'\n")
@@ -237,20 +237,20 @@ def get_task_to_dummy_app():
 			f.write("\toutfile = task(filelist, outpath, outpath)\n")
 			f.write("\treturn outfile\n")
 			f.close()
-		elif num >1:
-			f=open("./dummy_app/"+filename,'w')
+		elif num > 1:
+			f = open("./dummy_app/" + filename, 'w')
 			f.write("import os\n")
 			f.write("import time\n")
 			f.write("import shutil\n")
 			f.write("import uuid\n")
-			
+
 			f.write("\n")
 			f.write("def task(filename,pathin,pathout):\n")
-			f.write("\texecution_time = 1.1\n")
+			f.write("\texecution_time = " + str(round(sorted_list[i][1]['comp'], 1)) + "\n")
 			f.write("\ttimeout = time.time() + execution_time\n")
 			f.write("\twhile time.time() < timeout:\n")
 			f.write("\t\t1+1\n")
-			
+
 			f.write("\tfile_name = filename[0].split('.')[0]\n")
 			f.write("\toutput1 = file_name +'_'+str(uuid.uuid1())+'.txt'\n")
 			f.write("\n")
@@ -261,7 +261,7 @@ def get_task_to_dummy_app():
 			f.write("\tshutil.copyfile(input_path,output_path)\n")
 			f.write("\n")
 			f.write("\treturn [output_path]\n")
-			
+
 			f.write("\n")
 			f.write("def main():\n")
 			f.write("\tfilelist = ['1botnet.ipsum']\n")
