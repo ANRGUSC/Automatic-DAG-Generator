@@ -1,7 +1,0 @@
-6
-task0 1 true task1 task2 task3 
-task1 1 true task3 task5 task4 
-task2 1 true task3 task5 task4 
-task3 3 true task5 
-task4 2 true task5 
-task5 4 true home

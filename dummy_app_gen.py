@@ -1,9 +1,9 @@
 """
-Top level config file (leave this file at the root directory). ``import config`` on the top of your file to include the global information included here.
+This code uses the output DAG of ``rand_task_gen.py``(by Diyi), which is used to generate a random DAG, to generate the corresponding dummy application working for Jupiter (version 3) , 
 
 """
-__author__ = "Diyi Hu, Jiatong Wang, Quynh Nguyen, Bhaskar Krishnamachari"
-__copyright__ = "Copyright (c) 2018, Autonomous Networks Research Group. All rights reserved."
+__author__ = "Quynh Nguyen, Jiatong Wang, Diyi Hu and Bhaskar Krishnamachari"
+__copyright__ = "Copyright (c) 2019, Autonomous Networks Research Group. All rights reserved."
 __license__ = "GPL"
 __version__ = "1.0"
 
@@ -18,6 +18,8 @@ import pylab as plt
 import yaml
 import os
 import json
+import shutil
+from collections import defaultdict
 
 EPSILON = 1e-2
 
@@ -46,12 +48,24 @@ def random_list(depth,total_num,width_min,width_max):
         list_t.append(1)
         while True:
             t = random.randint(width_min,width_max)
+            print('-------')
+            print(t)
+            print(total_num)
+            print(list_t)
+            a = sum(list_t)-1+t
+            print(a)
+            print(width_min)
+            b = total_num -(sum(list_t)-1)
+            print(b)
+            print(width_max)
+
             if (sum(list_t)-1+t)<total_num:
                 list_t.append(t)
             elif  total_num -(sum(list_t)-1) >=width_min and total_num -(sum(list_t)-1)<=width_max :
                 list_t.append(total_num -(sum(list_t)-1))
                 break
             else:
+                print('something wrong')
                 pass
         list_t.append(1)
     return list_t
@@ -131,7 +145,7 @@ def plot_dag(dag,dag_path_plot):
 
 
 
-def get_task_dag(config_yml,dag_path_plot):
+def prepare_task_dag(config_yml,dag_path_plot):
 	with open(config_yml) as f_config:
 		config = yaml.load(f_config)
 	#--- generate task graph ---
@@ -152,8 +166,8 @@ def get_task_dag(config_yml,dag_path_plot):
 	return dag
 
 #Generate configuration.txt
-def get_task_to_dag(dag):
-	f = open("configuration.txt", 'w')
+def generate_config(dag,app_path):
+	f = open(app_path, 'w')
 	total_node = len(dag.nodes())
 	f.write(str(total_node) + "\n")
 	task_dict = {}
@@ -182,22 +196,24 @@ def get_task_to_dag(dag):
 
 	f.close()
 
-def get_task_to_communication(dag):
-	f = open("communication.txt",'w')
+def generate_communication(dag,app_path):
+	f = open(app_path,'w')
 	for i in dag.nodes():
-		f.write("task"+i+ "\t{")
+		f.write("task"+i+ " ")
 		for e0,e1,d in dag.edges(data=True):
 			if i == e0:
-				f.write('"task"'+e1+':"'+str(round(d['data'],2))+'KB",')
-		f.write("}\n")
+				f.write('task'+e1+'-'+str(round(d['data'],2))+' ') #KB
+		f.write("\n")
 	f.close()
 
+
 #Generate dummy scripts
-def get_task_to_dummy_app():
+def generate_scripts(dag,config_path,script_path,app_path,sample_path):
+	
+
+	print('------ Read input parameters from DAG  -------------')
 	sorted_list = sorted(dag.nodes(data=True), key=lambda x: x[0], reverse=False)
-	if "dummy_app" not in os.listdir('.'):
-		os.mkdir("dummy_app")
-	f = open("configuration.txt", 'r')
+	f = open(config_path, 'r')
 	total_line = f.readlines()
 	del total_line[0]
 	f.close()
@@ -205,85 +221,130 @@ def get_task_to_dummy_app():
 		tmp = total_line[i].split(' ')
 		filename = tmp[0] + ".py"
 		num = int(tmp[1])
-		if num == 1:
-			f = open("./dummy_app/" + filename, 'w')
-			f.write("import os\n")
-			f.write("import time\n")
-			f.write("import shutil\n")
-			f.write("import uuid\n")
+		file_path = script_path + filename
 
-			f.write("\n")
-			f.write("def task(filename,pathin,pathout):\n")
-			f.write("\texecution_time = " + str(round(sorted_list[i][1]['comp'], 1)) + "\n")
-			f.write("\ttimeout = time.time() + execution_time\n")
-			f.write("\twhile time.time() < timeout:\n")
-			f.write("\t\t1+1\n")
+		f = open(file_path, 'w')
+		f.write("import os\n")
+		f.write("import time\n")
+		f.write("import shutil\n")
+		# f.write("import uuid\n")
 
-			f.write("\tfile_name = filename.split('.')[0]\n")
-			f.write("\toutput1 = file_name +'_'+str(uuid.uuid1())+'.txt'\n")
-			f.write("\n")
+		f.write("\n")
+		f.write("def task(filename,pathin,pathout):\n")
+		f.write("\texecution_time = " + str(round(sorted_list[i][1]['comp'], 1)) + "\n")
+		f.write("\texecution_time\n")
+		f.write("\ttimeout = time.time() + execution_time\n")
+		f.write("\twhile time.time() < timeout:\n")
+		f.write("\t\t1+1\n")
 
-			f.write("\tinput_path = os.path.join(pathin,filename)\n")
-			f.write("\toutput_path = os.path.join(pathout,output1)\n")
-			f.write("\n")
-			f.write("\tshutil.copyfile(input_path,output_path)\n")
-			f.write("\n")
-			f.write("\treturn [output_path]\n")
 
-			f.write("\n")
-			f.write("def main():\n")
-			f.write("\tfilelist = '1botnet.ipsum'\n")
-			f.write("\toutpath = os.path.join(os.path.dirname(__file__), 'sample_input/')\n")
-			f.write("\toutfile = task(filelist, outpath, outpath)\n")
-			f.write("\treturn outfile\n")
-			f.close()
-		elif num > 1:
-			f = open("./dummy_app/" + filename, 'w')
-			f.write("import os\n")
-			f.write("import time\n")
-			f.write("import shutil\n")
-			f.write("import uuid\n")
+		f.write("\ttask_name = os.path.basename(__file__).split('.')[0]\n")
+		f.write("\tprint('-------------------------')\n")
+		f.write("\tprint(task_name)\n")
+		f.write("\tprint(filename)\n")
+		f.write("\tprint(pathin)\n")
+		f.write("\tprint(pathout)\n")
+		f.write("\tprint('-------------------------')\n")
+		f.write("\tif isinstance(filename, list):\n")
+		f.write("\t\toutput1 = [file.split('.')[0] +'_'+task_name+'.txt' for file in filename]\n")
+		f.write("\t\tinput_file = filename[0].split('_')[0]\n")
+		f.write("\telif not isinstance(filename, list):\n")
+		f.write("\t\toutput1=[filename.split('.')[0] +'_'+task_name+'.txt']\n")
+		f.write("\t\tinput_file = filename.split('_')[0]\n")
+		f.write("\tprint(output1)\n")
+		f.write("\tprint(input_file)\n")
+		f.write("\toutput_fname=[f.split('.')[0].split('_')[-1] for f in output1]\n")
+		f.write("\toutput_name='_'.join(output_fname)\n")
+		f.write("\toutput_name=input_file+'_'+output_name\n")
+		f.write("\tprint(output_name)\n")
+		f.write("\tf = open('centralized_scheduler/communication.txt', 'r')\n")
+		f.write("\ttotal_info = f.read().splitlines()\n")
+		f.write("\tf.close()\n")
+		f.write("\tcomm = dict()\n")
+		f.write("\tfor line in total_info:\n")
+		f.write("\t\tsrc = line.strip().split(' ')[0]\n")
+		f.write("\t\tdest_info = line.split(' ')[1:-1]\n")
+		f.write("\t\tif len(dest_info)>0:\n")
+		f.write("\t\t\tcomm[src] = dest_info\n")
+		f.write("\tprint('-------------------------##')\n")
+		f.write("\tprint(comm)\n")
+		f.write("\tprint(comm.keys())\n")
+		f.write("\tif task_name in comm.keys():\n")
+		f.write("\t\tprint(comm[task_name])\n")
+		f.write("\t\tdest=[x.split('_')[0] for x in comm[task_name]]\n")
+		f.write("\t\tprint(dest)\n")
+		f.write("\t\tcomm_data=[float(x.split('_')[1]) for x in comm[task_name]]\n")
+		f.write("\t\tprint(comm_data)\n")
+		f.write("\tfile_size = '10'\n")
+		f.write("\tif not os.path.isdir(pathout):\n")
+		f.write("\t\tos.makedirs(pathout, exist_ok=True)\n")
+		
+		f.write("\toutput_path=os.path.join(pathout,output_name) \n")
+		f.write("\tprint(output_path)\n")
+		f.write("\tbash_script='centralized_scheduler/generate_random_files.sh'+' '+output_path+' '+file_size\n")
+		f.write("\tprint(bash_script)\n")
+		f.write("\tos.system(bash_script)\n")
+		
+		f.write("\n")
+		f.write("\treturn output_path\n")
 
-			f.write("\n")
-			f.write("def task(filename,pathin,pathout):\n")
-			f.write("\texecution_time = " + str(round(sorted_list[i][1]['comp'], 1)) + "\n")
-			f.write("\ttimeout = time.time() + execution_time\n")
-			f.write("\twhile time.time() < timeout:\n")
-			f.write("\t\t1+1\n")
-
-			f.write("\tfile_name = filename[0].split('.')[0]\n")
-			f.write("\toutput1 = file_name +'_'+str(uuid.uuid1())+'.txt'\n")
-			f.write("\n")
-
-			f.write("\tinput_path = os.path.join(pathin,filename[0])\n")
-			f.write("\toutput_path = os.path.join(pathout,output1)\n")
-			f.write("\n")
-			f.write("\tshutil.copyfile(input_path,output_path)\n")
-			f.write("\n")
-			f.write("\treturn [output_path]\n")
-
-			f.write("\n")
-			f.write("def main():\n")
-			f.write("\tfilelist = ['1botnet.ipsum']\n")
-			f.write("\toutpath = os.path.join(os.path.dirname(__file__), 'sample_input/')\n")
-			f.write("\toutfile = task(filelist, outpath, outpath)\n")
-			f.write("\treturn outfile\n")
-			f.close()
-
-# This function is not used in current version. But keep it for further uses
-def get_task_to_generate_file(dag):
-	if "test" not in os.listdir():
-		os.mkdir("test")
-	for e0,e1,d in dag.edges(data=True):
-		filename = "task"+e0+"_to_"+"task"+e1+".txt"
-		f=open("./test/"+filename,'w')
-		s='1'*int(d['data']*1024)
-		f.write(s)
+		f.write("\n")
+		f.write("def main():\n")
+		f.write("\tfilelist = '1botnet.ipsum'\n")
+		f.write("\toutpath = os.path.join(os.path.dirname(__file__), 'sample_input/')\n")
+		f.write("\toutfile = task(filelist, outpath, outpath)\n")
+		f.write("\treturn outfile\n")
 		f.close()
 
+	shutil.copy('jupiterapp/app_config.ini',app_path)
+	shutil.copy('jupiterapp/input_node.txt',app_path) #for WAVE
+	shutil.copy('jupiterapp/generate_random_files.sh',script_path)
+	os.mkdir(sample_path)
+	shutil.copy('jupiterapp/1botnet.ipsum',sample_path)
 
-def get_task_to_json(dag):
-	f = open("config.json", 'w')
+
+def generate_nameconvert(dag,app_path):
+	
+	name_input = defaultdict(list)
+	name_output = defaultdict(list)
+
+	name_input["input"].append('input')
+	name_output["input"].append('output')
+
+	name_input['task0'].append('input')
+
+	# for i in dag.nodes():
+	# 	for e0,e1,d in dag.edges(data=True):
+	# 		if i == e0:
+	# 			name_input["task"+e1].append("task"+e0+"_to_"+"task"+e1+".txt")
+	# 			name_output["task"+e0].append("task"+e0+"_to_"+"task"+e1+".txt")
+		
+	# for i in dag.nodes():
+	# 	if not name_output["task"+i]:
+	# 		name_output["task"+i].append('output')	
+
+	
+
+	# f = open(app_path,'w')
+	# f.write('input output input\n')
+	# for i in dag.nodes():
+	# 	for inputname in name_input["task"+i]:
+	# 		for outputname in name_output["task"+i]:
+	# 			s = "task"+i+ " "+ inputname +" "+outputname+"\n"
+	# 			f.write(s)
+	# f.close()
+
+	f = open(app_path,'w')
+	f.write('input output input\n')
+	for i in dag.nodes():
+		s = "task"+i+ " "+ "task"+i +" "+"task"+i+"\n"
+		f.write(s)
+	f.close()
+
+
+def generate_json(dag,app_path):
+	f = open(app_path, 'w')
+	print(app_path)
 	taskname_map = dict()
 	exec_profiler = dict()
 	for i in dag.nodes():
@@ -295,11 +356,37 @@ def get_task_to_json(dag):
 
 if __name__ == '__main__':
 	args = parse_args()
-	dag = get_task_dag(args.conf,"dag.png")
+	dummy_app_path = 'dummy_app/'
+	dummy_dag_plot = dummy_app_path + 'dag.png'
+	dummy_config_path = dummy_app_path + 'configuration.txt'
+	dummy_script_path = dummy_app_path + 'scripts/'
+	dummy_json_path = dummy_script_path + 'config.json' 
+	dummy_comm_path = dummy_script_path + 'communication.txt' 
+	dummy_sample_path = dummy_app_path + 'sample_input/'
+	dummy_name_path = dummy_app_path + "name_convert.txt"
+	
+	if os.path.isdir(dummy_app_path):
+		shutil.rmtree(dummy_app_path)
+	os.mkdir(dummy_app_path)
 
-	get_task_to_dag(dag)
-	get_task_to_communication(dag)
-	get_task_to_dummy_app()
-	#get_task_to_generate_file(dag)
-	get_task_to_json(dag)
-	print('done')
+	print('Create dummy_app folder, generate DAG and plot corresponding dag.png')
+	dag = prepare_task_dag(args.conf,dummy_dag_plot)
+
+	print('Generate configuration.txt')
+	generate_config(dag,dummy_config_path)
+
+	
+
+	os.mkdir(dummy_script_path)
+	print('Generate dummy application scripts')
+	generate_scripts(dag, dummy_config_path,dummy_script_path,dummy_app_path,dummy_sample_path)
+
+	print('Generate communication.txt')
+	generate_communication(dag,dummy_comm_path)
+
+	print('Generate config.json file')
+	generate_json(dag,dummy_json_path)
+
+	print('Generate name_convert.txt')
+	generate_nameconvert(dag,dummy_name_path)
+	print('The dummy application is generated successfully!')

@@ -5,7 +5,7 @@
 # Plot 4 (taskDeg-cluDeg vs. improvement)          #
 ####################################################
 
-depth:  2
+depth:  4
 width_min:  2       # [Sept 5]: 1, 2, 3
 width_max:  4       # [Sept 5]: 3, 4, 5
 ccr:  20            # [Sept 5]: 2, 20, 200
