@@ -183,7 +183,8 @@ def generate_config(dag,app_path):
 		if i not in data.keys():
 			data[i] = ""
 		data[i] += str(task_dict[i]) + " "
-		data[i] += "true "
+		#data[i] += "true " ## send single output to all the children tasks
+		data[i] += "false " ## send all children output to all the children tasks correspondingly
 		for e0, e1 in dag.edges():
 			if i == e0:
 				data[i] +="task" + e1 + " "
@@ -217,6 +218,8 @@ def generate_scripts(dag,config_path,script_path,app_path,sample_path):
 	total_line = f.readlines()
 	del total_line[0]
 	f.close()
+
+
 	for i in range(len(total_line)):
 		tmp = total_line[i].split(' ')
 		filename = tmp[0] + ".py"
@@ -227,7 +230,8 @@ def generate_scripts(dag,config_path,script_path,app_path,sample_path):
 		f.write("import os\n")
 		f.write("import time\n")
 		f.write("import shutil\n")
-		# f.write("import uuid\n")
+		f.write("import math\n")
+		f.write("import random\n")
 
 		f.write("\n")
 		f.write("def task(filename,pathin,pathout):\n")
@@ -246,18 +250,25 @@ def generate_scripts(dag,config_path,script_path,app_path,sample_path):
 		f.write("\tprint(pathout)\n")
 		f.write("\tprint('-------------------------')\n")
 		f.write("\tif isinstance(filename, list):\n")
-		f.write("\t\toutput1 = [file.split('.')[0] +'_'+task_name+'.txt' for file in filename]\n")
+		f.write("\t\toutput1_list = [file.split('.')[0] +'_'+task_name+'.txt' for file in filename]\n")
 		f.write("\t\tinput_file = filename[0].split('_')[0]\n")
 		f.write("\telif not isinstance(filename, list):\n")
-		f.write("\t\toutput1=[filename.split('.')[0] +'_'+task_name+'.txt']\n")
+		f.write("\t\toutput1_list=[filename.split('.')[0] +'_'+task_name+'.txt']\n")
 		f.write("\t\tinput_file = filename.split('_')[0]\n")
+		f.write("\tprint(output1_list)\n")
+		f.write("\toutput1=set(output1_list)\n")
 		f.write("\tprint(output1)\n")
 		f.write("\tprint(input_file)\n")
+
 		f.write("\toutput_fname=[f.split('.')[0].split('_')[-1] for f in output1]\n")
 		f.write("\toutput_name='_'.join(output_fname)\n")
 		f.write("\toutput_name=input_file+'_'+output_name\n")
 		f.write("\tprint(output_name)\n")
-		f.write("\tf = open('centralized_scheduler/communication.txt', 'r')\n")
+
+		f.write("\tprint('-------------------------@@@')\n")
+		f.write("\tprint(os.path.realpath('communication.txt'))\n")
+
+		f.write("\tf = open('/centralized_scheduler/communication.txt', 'r')\n")
 		f.write("\ttotal_info = f.read().splitlines()\n")
 		f.write("\tf.close()\n")
 		f.write("\tcomm = dict()\n")
@@ -269,21 +280,42 @@ def generate_scripts(dag,config_path,script_path,app_path,sample_path):
 		f.write("\tprint('-------------------------##')\n")
 		f.write("\tprint(comm)\n")
 		f.write("\tprint(comm.keys())\n")
-		f.write("\tif task_name in comm.keys():\n")
-		f.write("\t\tprint(comm[task_name])\n")
-		f.write("\t\tdest=[x.split('_')[0] for x in comm[task_name]]\n")
-		f.write("\t\tprint(dest)\n")
-		f.write("\t\tcomm_data=[float(x.split('_')[1]) for x in comm[task_name]]\n")
-		f.write("\t\tprint(comm_data)\n")
-		f.write("\tfile_size = '10'\n")
+		f.write("\tprint(task_name)\n")
 		f.write("\tif not os.path.isdir(pathout):\n")
 		f.write("\t\tos.makedirs(pathout, exist_ok=True)\n")
+
+		f.write("\toutput_path=[]\n")
+
+		f.write("\tif task_name in comm.keys():\n")
+		f.write("\t\tprint(comm[task_name])\n")
+		f.write("\t\tdest=[x.split('-')[0] for x in comm[task_name]]\n")
+		f.write("\t\tprint(dest)\n")
+		f.write("\t\tcomm_data=[str(math.ceil(float(x.split('-')[1]))) for x in comm[task_name]]\n")
+		f.write("\t\tprint(comm_data)\n")
+		f.write("\t\toutput_list=[]\n")
+		f.write("\t\tfile_size=[]\n")
 		
-		f.write("\toutput_path=os.path.join(pathout,output_name) \n")
-		f.write("\tprint(output_path)\n")
-		f.write("\tbash_script='centralized_scheduler/generate_random_files.sh'+' '+output_path+' '+file_size\n")
-		f.write("\tprint(bash_script)\n")
-		f.write("\tos.system(bash_script)\n")
+		f.write("\t\tfor idx,neighbor in enumerate(dest):\n")
+		f.write("\t\t\tprint(neighbor)\n")
+		f.write("\t\t\tprint(idx)\n")
+		f.write("\t\t\tnew_file=output_name+'_'+neighbor\n")
+		f.write("\t\t\toutput_list.append(new_file)\n")
+		f.write("\t\t\tfile_size.append(comm_data[idx])\n")
+		f.write("\t\t\tnew_path=os.path.join(pathout,new_file) \n")
+		f.write("\t\t\toutput_path.append(new_path)\n")
+		f.write("\t\t\tprint(new_path)\n")
+		f.write("\t\t\tbash_script='/centralized_scheduler/generate_random_files.sh'+' '+new_path+' '+comm_data[idx]\n")
+		f.write("\t\t\tprint(bash_script)\n")
+		f.write("\t\t\tos.system(bash_script)\n")
+		f.write("\telif task_name not in comm.keys():\n") #final task, next node is HOME
+		f.write("\t\tnew_file=output_name+'_'+task_name\n")
+		f.write("\t\tnew_path=os.path.join(pathout,new_file) \n")
+		f.write("\t\tprint(new_path)\n")
+		f.write("\t\toutput_path.append(new_path)\n")
+		f.write("\t\tfile_size=str(random.randint(1,20))\n") #random file size
+		f.write("\t\tbash_script='/centralized_scheduler/generate_random_files.sh'+' '+new_path+' '+file_size\n")
+		f.write("\t\tprint(bash_script)\n")
+		f.write("\t\tos.system(bash_script)\n")
 		
 		f.write("\n")
 		f.write("\treturn output_path\n")
@@ -301,6 +333,7 @@ def generate_scripts(dag,config_path,script_path,app_path,sample_path):
 	shutil.copy('jupiterapp/generate_random_files.sh',script_path)
 	os.mkdir(sample_path)
 	shutil.copy('jupiterapp/1botnet.ipsum',sample_path)
+	shutil.copy('jupiterapp/2botnet.ipsum',sample_path)
 
 
 def generate_nameconvert(dag,app_path):
