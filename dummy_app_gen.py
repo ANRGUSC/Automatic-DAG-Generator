@@ -337,41 +337,12 @@ def generate_scripts(dag,config_path,script_path,app_path,sample_path):
 
 
 def generate_nameconvert(dag,app_path):
-	
-	name_input = defaultdict(list)
-	name_output = defaultdict(list)
-
-	name_input["input"].append('input')
-	name_output["input"].append('output')
-
-	name_input['task0'].append('input')
-
-	# for i in dag.nodes():
-	# 	for e0,e1,d in dag.edges(data=True):
-	# 		if i == e0:
-	# 			name_input["task"+e1].append("task"+e0+"_to_"+"task"+e1+".txt")
-	# 			name_output["task"+e0].append("task"+e0+"_to_"+"task"+e1+".txt")
-		
-	# for i in dag.nodes():
-	# 	if not name_output["task"+i]:
-	# 		name_output["task"+i].append('output')	
-
-	
-
-	# f = open(app_path,'w')
-	# f.write('input output input\n')
-	# for i in dag.nodes():
-	# 	for inputname in name_input["task"+i]:
-	# 		for outputname in name_output["task"+i]:
-	# 			s = "task"+i+ " "+ inputname +" "+outputname+"\n"
-	# 			f.write(s)
-	# f.close()
 
 	f = open(app_path,'w')
-	f.write('input output input\n')
 	for i in dag.nodes():
-		s = "task"+i+ " "+ "task"+i +" "+"task"+i+"\n"
+		s = "task"+i+ " botnet botnet\n"
 		f.write(s)
+	f.write('input botnet botnet\n')
 	f.close()
 
 
