@@ -397,15 +397,23 @@ def generate_dummy_app(dummy_conf_file,dummy_app_path):
 	print('Generate name_convert.txt')
 	generate_nameconvert(dag,dummy_name_path)
 	print('The dummy application is generated successfully!')
-if __name__ == '__main__':
-	dummy_app_root = 'dummy_app_list/'
-	dummy_conf_root = 'dummy_task_config/'
-	N = 100 # number of dags
-	start = 1
-	max_conf_num = 5
+
+def generate_multiple_apps(dummy_app_root,dummy_conf_root,N,start,max_conf_num):
 	for i in range(start,N+1):
 		print(i)
 		dummy_app_path= '%sdummy_app%d/'%(dummy_app_root,i)
 		rand_config = random.randint(1,max_conf_num)
 		dummy_conf_path = '%stask_config%d.yml'%(dummy_conf_root,rand_config)
 		generate_dummy_app(dummy_conf_path, dummy_app_path)
+
+if __name__ == '__main__':
+	# generate multiple apps
+	# dummy_app_root = 'dummy_app_list/'
+	# dummy_conf_root = 'dummy_task_config/'
+	# N = 100 # number of dags
+	# start = 1
+	# max_conf_num = 5
+	# generate_multiple_apps(dummy_app_root,dummy_conf_root,N,start,max_conf_num)
+	dummy_conf_file = 'task_config_100.yml'
+	dummy_app_path = 'dummy_app_100/'
+	generate_dummy_app(dummy_conf_file,dummy_app_path)
