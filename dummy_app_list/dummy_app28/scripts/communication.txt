@@ -1,0 +1,6 @@
+task2 task5-11.52 
+task3 task5-16.67 
+task5 
+task1 task5-29.34 
+task4 task5-23.78 
+task0 task3-17.78 task2-12.4 task4-52.73 task5-52.41 task1-22.65 

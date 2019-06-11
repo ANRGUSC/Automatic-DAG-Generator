@@ -20,12 +20,14 @@ import os
 import json
 import shutil
 from collections import defaultdict
+import random
 
 EPSILON = 1e-2
 
-def parse_args():
+def parse_args(conf_file):
 	parser = argparse.ArgumentParser(description='generate random task graphs')
-	parser.add_argument("--conf",required=True,type=str,help='yaml file specifying task_dag generation parameters')
+	#parser.add_argument("--conf",required=True,type=str,help='yaml file specifying task_dag generation parameters')
+	parser.add_argument('--conf', nargs='?', const=conf_file, type=str,help='yaml file specifying task_dag generation parameters')
 	return parser.parse_args()
 
 def random_list(depth,total_num,width_min,width_max):
@@ -46,18 +48,19 @@ def random_list(depth,total_num,width_min,width_max):
                     break
     else:
         list_t.append(1)
-        while True:
+        num_tries = 30
+        for num in range(0,num_tries):
             t = random.randint(width_min,width_max)
-            print('-------')
-            print(t)
-            print(total_num)
-            print(list_t)
+            # print('-------')
+            # print(t)
+            # print(total_num)
+            # print(list_t)
             a = sum(list_t)-1+t
-            print(a)
-            print(width_min)
+            # print(a)
+            # print(width_min)
             b = total_num -(sum(list_t)-1)
-            print(b)
-            print(width_max)
+            # print(b)
+            # print(width_max)
 
             if (sum(list_t)-1+t)<total_num:
                 list_t.append(t)
@@ -358,9 +361,9 @@ def generate_json(dag,app_path):
 	f.write(json.dumps(final_json,indent = 2))
 	f.close()
 
-if __name__ == '__main__':
-	args = parse_args()
-	dummy_app_path = 'dummy_app/'
+def generate_dummy_app(dummy_conf_file,dummy_app_path):
+	args = parse_args(dummy_conf_file)
+	print(args)
 	dummy_dag_plot = dummy_app_path + 'dag.png'
 	dummy_config_path = dummy_app_path + 'configuration.txt'
 	dummy_script_path = dummy_app_path + 'scripts/'
@@ -394,3 +397,15 @@ if __name__ == '__main__':
 	print('Generate name_convert.txt')
 	generate_nameconvert(dag,dummy_name_path)
 	print('The dummy application is generated successfully!')
+if __name__ == '__main__':
+	dummy_app_root = 'dummy_app_list/'
+	dummy_conf_root = 'dummy_task_config/'
+	N = 100 # number of dags
+	start = 1
+	max_conf_num = 5
+	for i in range(start,N+1):
+		print(i)
+		dummy_app_path= '%sdummy_app%d/'%(dummy_app_root,i)
+		rand_config = random.randint(1,max_conf_num)
+		dummy_conf_path = '%stask_config%d.yml'%(dummy_conf_root,rand_config)
+		generate_dummy_app(dummy_conf_path, dummy_app_path)

@@ -1,0 +1,11 @@
+10
+task0 1 false task2 task3 task5 task1 task4 task6 
+task1 1 false task7 
+task2 1 false task5 
+task3 1 false task7 task4 task6 task5 task8 
+task4 2 false task7 
+task5 3 false task8 
+task6 2 false task7 task9 
+task7 4 false task9 
+task8 2 false task9 
+task9 3 false home
