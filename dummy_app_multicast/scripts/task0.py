@@ -5,7 +5,7 @@ import math
 import random
 
 def task(filename,pathin,pathout):
-	execution_time = 1.3
+	execution_time = 3.1
 	timeout = time.time() + execution_time
 	while time.time() < timeout:
 		1+1
@@ -36,9 +36,10 @@ def task(filename,pathin,pathout):
 	total_info = f.read().splitlines()
 	f.close()
 	comm = dict()
+	multicast = dict()
 	for line in total_info:
 		src = line.strip().split(' ')[0]
-		multicast = line.strip().split(' ')[1]
+		multicast[src] = line.strip().split(' ')[1]
 		dest_info = line.split(' ')[2:-1]
 		if len(dest_info)>0:
 			comm[src] = dest_info
@@ -58,7 +59,8 @@ def task(filename,pathin,pathout):
 		print(comm_data)
 		output_list=[]
 		file_size=[]
-		if multicast=='false ':
+		multicast[task_name]
+		if multicast[task_name]=='false':
 			print('Multicast is false')
 			for idx,neighbor in enumerate(dest):
 				print(neighbor)
@@ -74,7 +76,7 @@ def task(filename,pathin,pathout):
 				os.system(bash_script)
 		else:
 			print('Multicast is true')
-			print(dest.keys()[0])
+			print(dest[0])
 			new_file=output_name
 			print(comm_data)
 			print(comm_data[0])
