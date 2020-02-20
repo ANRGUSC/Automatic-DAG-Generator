@@ -48,16 +48,16 @@ def random_list(depth,total_num,width_min,width_max):
         list_t.append(1)
         while True:
             t = random.randint(width_min,width_max)
-            print('-------')
-            print(t)
-            print(total_num)
-            print(list_t)
+            # print('-------')
+            # print(t)
+            # print(total_num)
+            # print(list_t)
             a = sum(list_t)-1+t
-            print(a)
-            print(width_min)
+            # print(a)
+            # print(width_min)
             b = total_num -(sum(list_t)-1)
-            print(b)
-            print(width_max)
+            # print(b)
+            # print(width_max)
 
             if (sum(list_t)-1+t)<total_num:
                 list_t.append(t)
@@ -165,8 +165,59 @@ def prepare_task_dag(config_yml,dag_path_plot):
 	
 	return dag
 
+def prepare_task_dag_multicast(config_yml,dag_path_plot):
+	with open(config_yml) as f_config:
+		config = yaml.load(f_config)
+	#--- generate task graph ---
+
+	task_per_level,level_per_task = gen_task_nodes(config['depth'],config['total_num'],config['width_min'],config['width_max'])
+	edges,adj_list_top_down,adj_list_down_top = gen_task_links(config['deg_mu'],config['deg_sigma'],task_per_level,level_per_task)
+	task_comp,link_comm = gen_attr(np.arange(len(level_per_task)),edges,config['ccr'],config['comp_mu'],config['comp_sigma'],config['link_comm_sigma'])
+	
+	neighbors = {}
+	multicast = {}
+
+	for edge in edges:
+		if edge[0] not in neighbors:
+			neighbors[edge[0]] = [edge[1]]
+		else:
+			neighbors[edge[0]].append(edge[1])
+
+	for node in neighbors:
+		temp = random.uniform(0, 1)
+		if (temp<0.5) & (len(neighbors[node])>1) :
+			multicast[node] = 'true '
+		else:
+			multicast[node] = 'false '
+
+	last_level = config['depth'] -2
+	last_task = task_per_level[last_level][0]
+	multicast[str(last_task)]='false '
+	edge_d = [(e[0],e[1],{'data':link_comm[i]}) for i,e in enumerate(edges)]
+	newedge_d = []
+	idx = 0
+	for node in neighbors:
+		tmp_mc = link_comm[idx]
+		for nb in neighbors[node]:
+			if multicast[node]=='true ':
+				newedge_d.append(tuple((node,nb,{'data':tmp_mc})))
+			else:
+				newedge_d.append(tuple((node,nb,{'data':link_comm[idx]})))
+			idx = idx + 1
+
+	dag = nx.DiGraph()
+	dag.add_edges_from(newedge_d)
+	for i,t in enumerate(task_comp):
+		dag.node[str(i)]['comp'] = t
+		##NOTE: actually it should not be called 'comp', but 'computation data amount'!!!
+	if dag_path_plot is not None:
+		plot_dag(dag,dag_path_plot)
+	#print(dag.graph)
+	
+	return dag,neighbors,multicast
+
 #Generate configuration.txt
-def generate_config(dag,app_path):
+def generate_config_multitask(dag,multicast,app_path):
 	f = open(app_path, 'w')
 	total_node = len(dag.nodes())
 	f.write(str(total_node) + "\n")
@@ -183,8 +234,9 @@ def generate_config(dag,app_path):
 		if i not in data.keys():
 			data[i] = ""
 		data[i] += str(task_dict[i]) + " "
+		data[i] += multicast[i]
 		#data[i] += "true " ## send single output to all the children tasks
-		data[i] += "false " ## send all children output to all the children tasks correspondingly
+		#data[i] += "false " ## send all children output to all the children tasks correspondingly
 		for e0, e1 in dag.edges():
 			if i == e0:
 				data[i] +="task" + e1 + " "
@@ -197,10 +249,10 @@ def generate_config(dag,app_path):
 
 	f.close()
 
-def generate_communication(dag,app_path):
+def generate_communication_multicast(dag,multicast,app_path):
 	f = open(app_path,'w')
 	for i in dag.nodes():
-		f.write("task"+i+ " ")
+		f.write("task"+i+ " "+multicast[i])
 		for e0,e1,d in dag.edges(data=True):
 			if i == e0:
 				f.write('task'+e1+'-'+str(round(d['data'],2))+' ') #KB
@@ -209,7 +261,7 @@ def generate_communication(dag,app_path):
 
 
 #Generate dummy scripts
-def generate_scripts(dag,config_path,script_path,app_path,sample_path):
+def generate_scripts_multicast(dag,multicast,config_path,script_path,app_path,sample_path):
 	
 
 	print('------ Read input parameters from DAG  -------------')
@@ -274,10 +326,12 @@ def generate_scripts(dag,config_path,script_path,app_path,sample_path):
 		f.write("\tcomm = dict()\n")
 		f.write("\tfor line in total_info:\n")
 		f.write("\t\tsrc = line.strip().split(' ')[0]\n")
-		f.write("\t\tdest_info = line.split(' ')[1:-1]\n")
+		f.write("\t\tmulticast = line.strip().split(' ')[1]\n")
+		f.write("\t\tdest_info = line.split(' ')[2:-1]\n")
 		f.write("\t\tif len(dest_info)>0:\n")
 		f.write("\t\t\tcomm[src] = dest_info\n")
 		f.write("\tprint('-------------------------##')\n")
+		f.write("\tprint(multicast)\n")
 		f.write("\tprint(comm)\n")
 		f.write("\tprint(comm.keys())\n")
 		f.write("\tprint(task_name)\n")
@@ -294,17 +348,28 @@ def generate_scripts(dag,config_path,script_path,app_path,sample_path):
 		f.write("\t\tprint(comm_data)\n")
 		f.write("\t\toutput_list=[]\n")
 		f.write("\t\tfile_size=[]\n")
-		
-		f.write("\t\tfor idx,neighbor in enumerate(dest):\n")
-		f.write("\t\t\tprint(neighbor)\n")
-		f.write("\t\t\tprint(idx)\n")
-		f.write("\t\t\tnew_file=output_name+'_'+neighbor\n")
-		f.write("\t\t\toutput_list.append(new_file)\n")
-		f.write("\t\t\tfile_size.append(comm_data[idx])\n")
-		f.write("\t\t\tnew_path=os.path.join(pathout,new_file) \n")
-		f.write("\t\t\toutput_path.append(new_path)\n")
-		f.write("\t\t\tprint(new_path)\n")
-		f.write("\t\t\tbash_script='/centralized_scheduler/generate_random_files.sh'+' '+new_path+' '+comm_data[idx]\n")
+		f.write("\t\tif multicast=='false ':\n")
+		f.write("\t\t\tprint('Multicast is false')\n")
+		f.write("\t\t\tfor idx,neighbor in enumerate(dest):\n")
+		f.write("\t\t\t\tprint(neighbor)\n")
+		f.write("\t\t\t\tprint(idx)\n")
+		f.write("\t\t\t\tnew_file=output_name+'_'+neighbor\n")
+		f.write("\t\t\t\toutput_list.append(new_file)\n")
+		f.write("\t\t\t\tfile_size.append(comm_data[idx])\n")
+		f.write("\t\t\t\tnew_path=os.path.join(pathout,new_file) \n")
+		f.write("\t\t\t\toutput_path.append(new_path)\n")
+		f.write("\t\t\t\tprint(new_path)\n")
+		f.write("\t\t\t\tbash_script='/centralized_scheduler/generate_random_files.sh'+' '+new_path+' '+comm_data[idx]\n")
+		f.write("\t\t\t\tprint(bash_script)\n")
+		f.write("\t\t\t\tos.system(bash_script)\n")
+		f.write("\t\telse:\n")
+		f.write("\t\t\tprint('Multicast is true')\n")
+		f.write("\t\t\tprint(dest.keys()[0])\n")
+		f.write("\t\t\tnew_file=output_name\n")
+		f.write("\t\t\tprint(comm_data)\n")
+		f.write("\t\t\tprint(comm_data[0])\n")
+		f.write("\t\t\tnew_path=os.path.join(pathout,new_file)\n")
+		f.write("\t\t\tbash_script='/centralized_scheduler/generate_random_files.sh'+' '+new_path+' '+comm_data[0]\n")
 		f.write("\t\t\tprint(bash_script)\n")
 		f.write("\t\t\tos.system(bash_script)\n")
 		f.write("\telif task_name not in comm.keys():\n") #final task, next node is HOME
@@ -360,7 +425,7 @@ def generate_json(dag,app_path):
 
 if __name__ == '__main__':
 	args = parse_args()
-	dummy_app_path = 'dummy_app/'
+	dummy_app_path = 'dummy_app_multicast/'
 	dummy_dag_plot = dummy_app_path + 'dag.png'
 	dummy_config_path = dummy_app_path + 'configuration.txt'
 	dummy_script_path = dummy_app_path + 'scripts/'
@@ -374,19 +439,18 @@ if __name__ == '__main__':
 	os.mkdir(dummy_app_path)
 
 	print('Create dummy_app folder, generate DAG and plot corresponding dag.png')
-	dag = prepare_task_dag(args.conf,dummy_dag_plot)
+	dag,neighbors,multicast = prepare_task_dag_multicast(args.conf,dummy_dag_plot)
 
 	print('Generate configuration.txt')
-	generate_config(dag,dummy_config_path)
-
-	
+	generate_config_multitask(dag,multicast,dummy_config_path)
 
 	os.mkdir(dummy_script_path)
-	print('Generate dummy application scripts')
-	generate_scripts(dag, dummy_config_path,dummy_script_path,dummy_app_path,dummy_sample_path)
 
 	print('Generate communication.txt')
-	generate_communication(dag,dummy_comm_path)
+	generate_communication_multicast(dag,multicast,dummy_comm_path)
+
+	print('Generate dummy application scripts')
+	generate_scripts_multicast(dag,multicast,dummy_config_path,dummy_script_path,dummy_app_path,dummy_sample_path)
 
 	print('Generate config.json file')
 	generate_json(dag,dummy_json_path)

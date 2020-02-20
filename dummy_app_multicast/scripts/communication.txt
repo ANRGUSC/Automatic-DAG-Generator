@@ -1,0 +1,7 @@
+task1 false task4-30.25 task5-54.44 task6-48.53 
+task4 false task6-26.19 
+task5 false task6-15.74 
+task6 false 
+task3 true task6-63.57 task4-63.57 
+task0 false task3-48.28 task2-40.12 task1-52.16 task5-76.73 
+task2 false task5-29.51 
