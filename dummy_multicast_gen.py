@@ -190,7 +190,7 @@ def prepare_task_dag_multicast(config_yml,dag_path_plot):
 		else:
 			multicast[node] = 'false '
 
-	last_level = config['depth'] -2
+	last_level = len(task_per_level) -1
 	last_task = task_per_level[last_level][0]
 	multicast[str(last_task)]='false '
 	edge_d = [(e[0],e[1],{'data':link_comm[i]}) for i,e in enumerate(edges)]
@@ -427,7 +427,7 @@ def generate_json(dag,app_path):
 
 if __name__ == '__main__':
 	args = parse_args()
-	dummy_app_path = 'dummy_app_multicast/'
+	dummy_app_path = 'dummy_app_multicast_10/'
 	dummy_dag_plot = dummy_app_path + 'dag.png'
 	dummy_config_path = dummy_app_path + 'configuration.txt'
 	dummy_script_path = dummy_app_path + 'scripts/'
