@@ -1,8 +1,14 @@
-7
-task2 3 false task3 
-task3 5 false home
-task0 1 true task2 task1 task3 
-task1 3 false task3 
-task0dup1 1 true task2 task1 task3 
-task0dup2 1 true task2 task1 task3 
+13
+task8 2 false task9 
+task9 5 false home
+task2 3 false task5 
+task5 2 true task7 task9 task8 
+task7 4 false task9 
+task1 3 false task5 task6 task8 
+task6 4 true task9 task7 
+task0 1 true task2 task1 task4 task3 task6 
+task4 4 false task7 task9 
+task3 3 true task7 task4 
+task0dup1 1 true task2 task1 task4 task3 task6 
+task0dup2 1 true task2 task1 task4 task3 task6 
 taskdistribute 1 true task0 task0dup1 task0dup2 
