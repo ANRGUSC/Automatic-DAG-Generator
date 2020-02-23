@@ -245,6 +245,10 @@ def generate_config_multitask(dag,multicast,last_task,app_path,dup_task=None):
 			if i == e0:
 				data[i] +="task" + e1 + " "
 
+		if dup_task == None:
+			if i == last_task:
+				data[i] += "home"
+				
 		if (dup_task!=None) & (dup_task!=last_task):
 			if i == last_task:
 				data[i] += "home"

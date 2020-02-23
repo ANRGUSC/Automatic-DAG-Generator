@@ -1,32 +1,32 @@
-task8 false task9-39.31 task9dup1-39.31 task9dup2-39.31 
+task3 false task8-64.6 task7-51.7 task7dup1-51.7 task7dup2-51.7 task8dup1-64.6 task8dup2-64.6 
+task8 false task9-72.23 task9dup1-72.23 task9dup2-72.23 
+task7 false task9-54.27 task9dup1-54.27 task9dup2-54.27 
 task9 false taskaggregate-0.0 
-task2 false task5-1.6 task5dup1-1.6 task5dup2-1.6 
-task5 true task7-61.53 task9-61.53 task8-61.53 task7dup1-61.53 task7dup2-61.53 task8dup1-61.53 task8dup2-61.53 task9dup1-61.53 task9dup2-61.53 
-task7 false task9-50.17 task9dup1-50.17 task9dup2-50.17 
-task1 false task5-35.34 task6-43.98 task8-31.78 task5dup1-35.34 task5dup2-35.34 task6dup1-43.98 task6dup2-43.98 task8dup1-31.78 task8dup2-31.78 
-task6 true task9-11.41 task7-11.41 task7dup1-11.41 task7dup2-11.41 task9dup1-11.41 task9dup2-11.41 
-task0 true task2-45.31 task1-45.31 task4-45.31 task3-45.31 task6-45.31 task1dup1-45.31 task1dup2-45.31 task2dup1-45.31 task2dup2-45.31 task3dup1-45.31 task3dup2-45.31 task4dup1-45.31 task4dup2-45.31 task6dup1-45.31 task6dup2-45.31 
-task4 false task7-6.84 task9-0.01 task7dup1-6.84 task7dup2-6.84 task9dup1-0.01 task9dup2-0.01 
-task3 true task7-27.33 task4-27.33 task4dup1-27.33 task4dup2-27.33 task7dup1-27.33 task7dup2-27.33 
-task0dup1 true task2-45.31 task1-45.31 task4-45.31 task3-45.31 task6-45.31 task1dup1-45.31 task1dup2-45.31 task2dup1-45.31 task2dup2-45.31 task3dup1-45.31 task3dup2-45.31 task4dup1-45.31 task4dup2-45.31 task6dup1-45.31 task6dup2-45.31 
-task0dup2 true task2-45.31 task1-45.31 task4-45.31 task3-45.31 task6-45.31 task1dup1-45.31 task1dup2-45.31 task2dup1-45.31 task2dup2-45.31 task3dup1-45.31 task3dup2-45.31 task4dup1-45.31 task4dup2-45.31 task6dup1-45.31 task6dup2-45.31 
+task0 true task5-32.11 task4-32.11 task3-32.11 task6-32.11 task1-32.11 task2-32.11 task1dup1-32.11 task1dup2-32.11 task2dup1-32.11 task2dup2-32.11 task3dup1-32.11 task3dup2-32.11 task4dup1-32.11 task4dup2-32.11 task5dup1-32.11 task5dup2-32.11 task6dup1-32.11 task6dup2-32.11 
+task5 true task8-3.75 task9-3.75 task8dup1-3.75 task8dup2-3.75 task9dup1-3.75 task9dup2-3.75 
+task4 true task7-31.49 task5-31.49 task5dup1-31.49 task5dup2-31.49 task7dup1-31.49 task7dup2-31.49 
+task6 false task8-16.07 task7-28.99 task7dup1-28.99 task7dup2-28.99 task8dup1-16.07 task8dup2-16.07 
+task1 true task7-24.18 task8-24.18 task7dup1-24.18 task7dup2-24.18 task8dup1-24.18 task8dup2-24.18 
+task2 false task6-72.57 task6dup1-72.57 task6dup2-72.57 
+task0dup1 true task5-32.11 task4-32.11 task3-32.11 task6-32.11 task1-32.11 task2-32.11 task1dup1-32.11 task1dup2-32.11 task2dup1-32.11 task2dup2-32.11 task3dup1-32.11 task3dup2-32.11 task4dup1-32.11 task4dup2-32.11 task5dup1-32.11 task5dup2-32.11 task6dup1-32.11 task6dup2-32.11 
+task0dup2 true task5-32.11 task4-32.11 task3-32.11 task6-32.11 task1-32.11 task2-32.11 task1dup1-32.11 task1dup2-32.11 task2dup1-32.11 task2dup2-32.11 task3dup1-32.11 task3dup2-32.11 task4dup1-32.11 task4dup2-32.11 task5dup1-32.11 task5dup2-32.11 task6dup1-32.11 task6dup2-32.11 
 taskdistribute true task0-0.0 task0dup1-0.0 task0dup2-0.0 
-task1dup1 false task5-35.34 task6-43.98 task8-31.78 task5dup1-35.34 task5dup2-35.34 task6dup1-43.98 task6dup2-43.98 task8dup1-31.78 task8dup2-31.78 
-task1dup2 false task5-35.34 task6-43.98 task8-31.78 task5dup1-35.34 task5dup2-35.34 task6dup1-43.98 task6dup2-43.98 task8dup1-31.78 task8dup2-31.78 
-task2dup1 false task5-1.6 task5dup1-1.6 task5dup2-1.6 
-task2dup2 false task5-1.6 task5dup1-1.6 task5dup2-1.6 
-task3dup1 true task7-27.33 task4-27.33 task4dup1-27.33 task4dup2-27.33 task7dup1-27.33 task7dup2-27.33 
-task3dup2 true task7-27.33 task4-27.33 task4dup1-27.33 task4dup2-27.33 task7dup1-27.33 task7dup2-27.33 
-task4dup1 false task7-6.84 task9-0.01 task7dup1-6.84 task7dup2-6.84 task9dup1-0.01 task9dup2-0.01 
-task4dup2 false task7-6.84 task9-0.01 task7dup1-6.84 task7dup2-6.84 task9dup1-0.01 task9dup2-0.01 
-task5dup1 true task7-61.53 task9-61.53 task8-61.53 task7dup1-61.53 task7dup2-61.53 task8dup1-61.53 task8dup2-61.53 task9dup1-61.53 task9dup2-61.53 
-task5dup2 true task7-61.53 task9-61.53 task8-61.53 task7dup1-61.53 task7dup2-61.53 task8dup1-61.53 task8dup2-61.53 task9dup1-61.53 task9dup2-61.53 
-task6dup1 true task9-11.41 task7-11.41 task7dup1-11.41 task7dup2-11.41 task9dup1-11.41 task9dup2-11.41 
-task6dup2 true task9-11.41 task7-11.41 task7dup1-11.41 task7dup2-11.41 task9dup1-11.41 task9dup2-11.41 
-task7dup1 false task9-50.17 task9dup1-50.17 task9dup2-50.17 
-task7dup2 false task9-50.17 task9dup1-50.17 task9dup2-50.17 
-task8dup1 false task9-39.31 task9dup1-39.31 task9dup2-39.31 
-task8dup2 false task9-39.31 task9dup1-39.31 task9dup2-39.31 
+task1dup1 true task7-24.18 task8-24.18 task7dup1-24.18 task7dup2-24.18 task8dup1-24.18 task8dup2-24.18 
+task1dup2 true task7-24.18 task8-24.18 task7dup1-24.18 task7dup2-24.18 task8dup1-24.18 task8dup2-24.18 
+task2dup1 false task6-72.57 task6dup1-72.57 task6dup2-72.57 
+task2dup2 false task6-72.57 task6dup1-72.57 task6dup2-72.57 
+task3dup1 false task8-64.6 task7-51.7 task7dup1-51.7 task7dup2-51.7 task8dup1-64.6 task8dup2-64.6 
+task3dup2 false task8-64.6 task7-51.7 task7dup1-51.7 task7dup2-51.7 task8dup1-64.6 task8dup2-64.6 
+task4dup1 true task7-31.49 task5-31.49 task5dup1-31.49 task5dup2-31.49 task7dup1-31.49 task7dup2-31.49 
+task4dup2 true task7-31.49 task5-31.49 task5dup1-31.49 task5dup2-31.49 task7dup1-31.49 task7dup2-31.49 
+task5dup1 true task8-3.75 task9-3.75 task8dup1-3.75 task8dup2-3.75 task9dup1-3.75 task9dup2-3.75 
+task5dup2 true task8-3.75 task9-3.75 task8dup1-3.75 task8dup2-3.75 task9dup1-3.75 task9dup2-3.75 
+task6dup1 false task8-16.07 task7-28.99 task7dup1-28.99 task7dup2-28.99 task8dup1-16.07 task8dup2-16.07 
+task6dup2 false task8-16.07 task7-28.99 task7dup1-28.99 task7dup2-28.99 task8dup1-16.07 task8dup2-16.07 
+task7dup1 false task9-54.27 task9dup1-54.27 task9dup2-54.27 
+task7dup2 false task9-54.27 task9dup1-54.27 task9dup2-54.27 
+task8dup1 false task9-72.23 task9dup1-72.23 task9dup2-72.23 
+task8dup2 false task9-72.23 task9dup1-72.23 task9dup2-72.23 
 task9dup1 false taskaggregate-0.0 
 task9dup2 false taskaggregate-0.0 
 taskaggregate false 

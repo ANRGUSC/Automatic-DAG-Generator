@@ -1,10 +1,10 @@
-task8 false task9-39.31 
+task3 false task8-64.6 task7-51.7 
+task8 false task9-72.23 
+task7 false task9-54.27 
 task9 false 
-task2 false task5-1.6 
-task5 true task7-61.53 task9-61.53 task8-61.53 
-task7 false task9-50.17 
-task1 false task5-35.34 task6-43.98 task8-31.78 
-task6 true task9-11.41 task7-11.41 
-task0 true task2-45.31 task1-45.31 task4-45.31 task3-45.31 task6-45.31 
-task4 false task7-6.84 task9-0.01 
-task3 true task7-27.33 task4-27.33 
+task0 true task5-32.11 task4-32.11 task3-32.11 task6-32.11 task1-32.11 task2-32.11 
+task5 true task8-3.75 task9-3.75 
+task4 true task7-31.49 task5-31.49 
+task6 false task8-16.07 task7-28.99 
+task1 true task7-24.18 task8-24.18 
+task2 false task6-72.57 
