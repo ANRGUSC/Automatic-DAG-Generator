@@ -1,0 +1,10 @@
+task2 botnet botnet
+task3 botnet botnet
+task0 botnet botnet
+task1 botnet botnet
+task0dup1 botnet botnet
+task0dup2 botnet botnet
+taskdistribute botnet botnet
+task1dup1 botnet botnet
+task1dup2 botnet botnet
+input botnet botnet

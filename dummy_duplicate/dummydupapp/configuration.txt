@@ -1,0 +1,5 @@
+4
+task2 1 false task3 
+task3 3 false 
+task0 1 true task2 task1 task3 
+task1 1 false task3 

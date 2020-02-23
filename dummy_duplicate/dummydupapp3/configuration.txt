@@ -1,0 +1,15 @@
+14
+task2 3 false task3 task3dup1 task3dup2 
+task3 9 false taskaggregate 
+task0 1 true task2 task1 task3 task1dup1 task1dup2 task2dup1 task2dup2 task3dup1 task3dup2 
+task1 3 false task3 task3dup1 task3dup2 
+task0dup1 1 true task2 task1 task3 task1dup1 task1dup2 task2dup1 task2dup2 task3dup1 task3dup2 
+task0dup2 1 true task2 task1 task3 task1dup1 task1dup2 task2dup1 task2dup2 task3dup1 task3dup2 
+taskdistribute 1 true task0 task0dup1 task0dup2 
+task1dup1 3 false task3 task3dup1 task3dup2 
+task1dup2 3 false task3 task3dup1 task3dup2 
+task2dup1 3 false task3 task3dup1 task3dup2 
+task2dup2 3 false task3 task3dup1 task3dup2 
+task3dup1 9 false taskaggregate 
+task3dup2 9 false taskaggregate 
+taskaggregate 3 false home

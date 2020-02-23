@@ -1,0 +1,14 @@
+task2 false task3-80.5 task3dup1-80.5 task3dup2-80.5 
+task3 false taskaggregate-0.0 
+task0 true task2-17.97 task1-17.97 task3-17.97 task1dup1-17.97 task1dup2-17.97 task2dup1-17.97 task2dup2-17.97 task3dup1-17.97 task3dup2-17.97 
+task1 false task3-44.12 task3dup1-44.12 task3dup2-44.12 
+task0dup1 true task2-17.97 task1-17.97 task3-17.97 task1dup1-17.97 task1dup2-17.97 task2dup1-17.97 task2dup2-17.97 task3dup1-17.97 task3dup2-17.97 
+task0dup2 true task2-17.97 task1-17.97 task3-17.97 task1dup1-17.97 task1dup2-17.97 task2dup1-17.97 task2dup2-17.97 task3dup1-17.97 task3dup2-17.97 
+taskdistribute true task0-0.0 task0dup1-0.0 task0dup2-0.0 
+task1dup1 false task3-44.12 task3dup1-44.12 task3dup2-44.12 
+task1dup2 false task3-44.12 task3dup1-44.12 task3dup2-44.12 
+task2dup1 false task3-80.5 task3dup1-80.5 task3dup2-80.5 
+task2dup2 false task3-80.5 task3dup1-80.5 task3dup2-80.5 
+task3dup1 false taskaggregate-0.0 
+task3dup2 false taskaggregate-0.0 
+taskaggregate false 

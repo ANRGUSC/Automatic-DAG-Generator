@@ -1,0 +1,8 @@
+7
+task2 3 false task3 
+task3 5 false home
+task0 1 true task2 task1 task3 
+task1 3 false task3 
+task0dup1 1 true task2 task1 task3 
+task0dup2 1 true task2 task1 task3 
+taskdistribute 1 true task0 task0dup1 task0dup2 
