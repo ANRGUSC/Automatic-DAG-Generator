@@ -3,9 +3,24 @@ import time
 import shutil
 import math
 import random
+import filecmp
+from collections import defaultdict
 
 def task(filename,pathin,pathout):
-	execution_time = 2.1
+	count = defaultdict(0)
+	if isinstance(filename, list):
+		input_files = [x.split('_')[0] for x in filename]
+		for i in range(0,len(input_files)-1):
+			for j in range(i+1,len(input_files)):
+				if filecmp.cmp(input_files[i],input_files[j], shallow=False):
+					count[input_files[i]]=count[input_files[i]]+1
+					count[input_files[j]]=count[input_files[j]]+1
+		candidate=max(count, key=count.get)
+		if count[candidate] < math.ceil(1.5):
+			print('The validator can not come to aggreement')
+			return -1
+
+	execution_time = 1.9
 	timeout = time.time() + execution_time
 	while time.time() < timeout:
 		1+1
