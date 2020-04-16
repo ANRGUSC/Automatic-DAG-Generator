@@ -7,9 +7,10 @@ import filecmp
 from collections import defaultdict
 
 def task(filename,pathin,pathout):
-	count = defaultdict(0)
+	input_list = [pathin+'/'+ file for file in filename]
+	count = defaultdict(lambda:0)
 	if isinstance(filename, list):
-		input_files = [x.split('_')[0] for x in filename]
+		input_files = [pathin+'/'+file for file in filename]
 		for i in range(0,len(input_files)-1):
 			for j in range(i+1,len(input_files)):
 				if filecmp.cmp(input_files[i],input_files[j], shallow=False):
@@ -20,7 +21,7 @@ def task(filename,pathin,pathout):
 			print('The validator can not come to aggreement')
 			return -1
 
-	execution_time = 1.9
+	execution_time = 2.4
 	timeout = time.time() + execution_time
 	while time.time() < timeout:
 		1+1

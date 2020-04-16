@@ -1,23 +1,23 @@
-task0 false task1-89.21 task4-63.48 task2-76.06 task1dup1-89.21 task1dup2-89.21 task2dup1-76.06 task2dup2-76.06 task4dup1-63.48 task4dup2-63.48 
-task1 false task5-16.13 task6-0.01 task3-26.57 task8-78.85 task3dup1-26.57 task3dup2-26.57 task5dup1-16.13 task5dup2-16.13 
-task4 false task5-55.8 task7-46.66 task8-67.36 task5dup1-55.8 task5dup2-55.8 
-task2 true task4-48.71 task3-48.71 task3dup1-48.71 task3dup2-48.71 task4dup1-48.71 task4dup2-48.71 
-task3 false task7-40.84 task9-18.57 
-task7 false task9-46.53 
+task0 true task5-48.1 task3-48.1 task1-48.1 task2-48.1 task1dup1-48.1 task1dup2-48.1 task2dup1-48.1 task2dup2-48.1 task3dup1-48.1 task3dup2-48.1 task5dup1-48.1 task5dup2-48.1 
+task5 false task7-52.41 task6-24.53 task9-12.76 
+task3 true task7-17.88 task8-17.88 
+task1 false task8-56.75 task6-29.22 task3-46.29 task3dup1-46.29 task3dup2-46.29 
+task2 false task4-15.83 task7-38.44 task4dup1-15.83 task4dup2-15.83 
+task7 false task9-87.7 
+task8 false task9-42.48 
+task6 false task9-28.24 
 task9 false 
-task5 false task9-50.06 
-task8 false task9-60.59 
-task6 false task9-52.46 
-task0dup1 false task1-89.21 task4-63.48 task2-76.06 task1dup1-89.21 task1dup2-89.21 task2dup1-76.06 task2dup2-76.06 task4dup1-63.48 task4dup2-63.48 
-task0dup2 false task1-89.21 task4-63.48 task2-76.06 task1dup1-89.21 task1dup2-89.21 task2dup1-76.06 task2dup2-76.06 task4dup1-63.48 task4dup2-63.48 
+task4 false task7-18.97 task6-31.5 
+task0dup1 true task5-48.1 task3-48.1 task1-48.1 task2-48.1 task1dup1-48.1 task1dup2-48.1 task2dup1-48.1 task2dup2-48.1 task3dup1-48.1 task3dup2-48.1 task5dup1-48.1 task5dup2-48.1 
+task0dup2 true task5-48.1 task3-48.1 task1-48.1 task2-48.1 task1dup1-48.1 task1dup2-48.1 task2dup1-48.1 task2dup2-48.1 task3dup1-48.1 task3dup2-48.1 task5dup1-48.1 task5dup2-48.1 
 taskdistribute true task0-0.0 task0dup1-0.0 task0dup2-0.0 
-task1dup1 false task5-16.13 task6-0.01 task3-26.57 task8-78.85 task3dup1-26.57 task3dup2-26.57 task5dup1-16.13 task5dup2-16.13 
-task1dup2 false task5-16.13 task6-0.01 task3-26.57 task8-78.85 task3dup1-26.57 task3dup2-26.57 task5dup1-16.13 task5dup2-16.13 
-task2dup1 true task4-48.71 task3-48.71 task3dup1-48.71 task3dup2-48.71 task4dup1-48.71 task4dup2-48.71 
-task2dup2 true task4-48.71 task3-48.71 task3dup1-48.71 task3dup2-48.71 task4dup1-48.71 task4dup2-48.71 
-task3dup1 false task7-40.84 task9-18.57 
-task3dup2 false task7-40.84 task9-18.57 
-task4dup1 false task5-55.8 task7-46.66 task8-67.36 task5dup1-55.8 task5dup2-55.8 
-task4dup2 false task5-55.8 task7-46.66 task8-67.36 task5dup1-55.8 task5dup2-55.8 
-task5dup1 false task9-50.06 
-task5dup2 false task9-50.06 
+task1dup1 false task8-56.75 task6-29.22 task3-46.29 task3dup1-46.29 task3dup2-46.29 
+task1dup2 false task8-56.75 task6-29.22 task3-46.29 task3dup1-46.29 task3dup2-46.29 
+task2dup1 false task4-15.83 task7-38.44 task4dup1-15.83 task4dup2-15.83 
+task2dup2 false task4-15.83 task7-38.44 task4dup1-15.83 task4dup2-15.83 
+task3dup1 true task7-17.88 task8-17.88 
+task3dup2 true task7-17.88 task8-17.88 
+task4dup1 false task7-18.97 task6-31.5 
+task4dup2 false task7-18.97 task6-31.5 
+task5dup1 false task7-52.41 task6-24.53 task9-12.76 
+task5dup2 false task7-52.41 task6-24.53 task9-12.76 

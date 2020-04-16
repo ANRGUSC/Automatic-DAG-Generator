@@ -1,14 +1,14 @@
 13
-task0 1 false task1 task4 task2 
-task1 3 false task5 task6 task3 task8 
-task4 4 false task5 task7 task8 
-task2 3 true task4 task3 
-task3 2 false task7 task9 
-task7 2 false task9 
-task9 5 false home
-task5 2 false task9 
+task0 1 true task5 task3 task1 task2 
+task5 3 false task7 task6 task9 
+task3 4 true task7 task8 
+task1 3 false task8 task6 task3 
+task2 3 false task4 task7 
+task7 4 false task9 
 task8 2 false task9 
-task6 1 false task9 
-task0dup1 1 false task1 task4 task2 
-task0dup2 1 false task1 task4 task2 
+task6 3 false task9 
+task9 4 false home
+task4 1 false task7 task6 
+task0dup1 1 true task5 task3 task1 task2 
+task0dup2 1 true task5 task3 task1 task2 
 taskdistribute 1 true task0 task0dup1 task0dup2 

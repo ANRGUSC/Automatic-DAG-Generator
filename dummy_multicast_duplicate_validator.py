@@ -450,10 +450,10 @@ def append_scripts_validator(path,num_org):
 
     pattern2  = 'def task(filename,pathin,pathout):'
     subst2    = pattern2 + '\n'
-    # subst2    = subst2+"\tvalidated = True\n"
-    subst2    = subst2+"\tcount = defaultdict(0)\n"
+    subst2    = subst2+"\tinput_list = [pathin+'/'+ file for file in filename]\n"
+    subst2    = subst2+"\tcount = defaultdict(lambda:0)\n"
     subst2    = subst2+"\tif isinstance(filename, list):\n"
-    subst2    = subst2+"\t\tinput_files = [x.split('_')[0] for x in filename]\n"
+    subst2    = subst2+"\t\tinput_files = [pathin+'/'+file for file in filename]\n"
     subst2    = subst2+"\t\tfor i in range(0,len(input_files)-1):\n"
     subst2    = subst2+"\t\t\tfor j in range(i+1,len(input_files)):\n"
     subst2    = subst2+"\t\t\t\tif filecmp.cmp(input_files[i],input_files[j], shallow=False):\n"
@@ -462,7 +462,6 @@ def append_scripts_validator(path,num_org):
     subst2    = subst2+"\t\tcandidate=max(count, key=count.get)\n"
     subst2    = subst2+"\t\tif count[candidate] < math.ceil("+str(num_org/2)+"):\n"
     subst2    = subst2+"\t\t\tprint('The validator can not come to aggreement')\n"
-    # subst2    = subst2+"\t\t\tvalidated=False\n"
     subst2    = subst2+"\t\t\treturn -1\n"
     replace(path, pattern2, subst2)
 
