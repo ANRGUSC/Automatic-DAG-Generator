@@ -35,7 +35,7 @@ def random_list(depth,total_num,width_min,width_max):
         for i in range(depth-2):
             list_t.append(2)
         list_t.append(1)
-        #print(list_t)
+        print(list_t)
         for i in range(total_num-sum(list_t)+2):
             while True:
                 tmp = random.randint(1,len(list_t)-2)
@@ -48,8 +48,8 @@ def random_list(depth,total_num,width_min,width_max):
         list_t.append(1)
         while True:
             t = random.randint(width_min,width_max)
-            # print('-------')
-            # print(t)
+            print('-------')
+            print(t)
             # print(total_num)
             # print(list_t)
             a = sum(list_t)-1+t
@@ -76,6 +76,7 @@ def gen_task_nodes(depth,total_num,width_min,width_max):
 		num_list = [1,total_num,1]
 	else:
 		num_list = random_list(depth+2,total_num,width_min,width_max)
+	print(num_list)
 	num_levels = len(num_list)
 	num_nodes_per_level = np.array(num_list)
 	#num_nodes_per_level = np.array([random.randint(width_min,width_max) for i in range(num_levels)])
@@ -459,7 +460,7 @@ def generate_json(dag,app_path):
 
 if __name__ == '__main__':
 	args = parse_args()
-	dummy_app_path = 'dummy_chain/'
+	dummy_app_path = 'dummy_complex_50/'
 	dummy_dag_plot = dummy_app_path + 'dag.png'
 	dummy_config_path = dummy_app_path + 'configuration.txt'
 	dummy_script_path = dummy_app_path + 'scripts/'
