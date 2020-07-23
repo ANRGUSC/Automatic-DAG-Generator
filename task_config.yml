@@ -5,9 +5,9 @@
 # Plot 4 (taskDeg-cluDeg vs. improvement)          #
 ####################################################
 
-depth:  5
+depth:  2
 width_min:  2       # [Sept 5]: 1, 2, 3
-width_max:  4       # [Sept 5]: 3, 4, 5
+width_max:  4    # [Sept 5]: 3, 4, 5
 ccr:  20            # [Sept 5]: 2, 20, 200
 comp_mu:    2       # computation workload
 comp_sigma: 0.5

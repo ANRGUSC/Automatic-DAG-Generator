@@ -72,8 +72,10 @@ def random_list(depth,total_num,width_min,width_max):
 
 def gen_task_nodes(depth,total_num,width_min,width_max):
 	#num_levels = depth+2		# 2: 1 for entry task, 1 for exit task
-	num_list = random_list(depth+2,total_num,width_min,width_max)
-	print(num_list)
+	if depth==1:
+		num_list = [1,total_num,1]
+	else:
+		num_list = random_list(depth+2,total_num,width_min,width_max)
 	num_levels = len(num_list)
 	num_nodes_per_level = np.array(num_list)
 	#num_nodes_per_level = np.array([random.randint(width_min,width_max) for i in range(num_levels)])
@@ -124,7 +126,19 @@ def gen_task_links(deg_mu,deg_sigma,task_per_level,level_per_task,delta_lvl=2):
 			child_pool += tli
 		neighs_down_top[ti] = np.random.choice(child_pool,min(deg2[ti],len(child_pool)),replace=False)
 		edges += [(str(ci),str(ti)) for ci in neighs_down_top[ti]]
+	print(edges)
+	print(neighs_down_top)
+	print(neighs_top_down)
 	return list(set(edges)),neighs_top_down,neighs_down_top
+
+def gen_chain_links(level_per_task):
+	num_tasks = len(level_per_task)
+	edges = []
+	for i in range(num_tasks-1):
+		edges += [(str(i),str(i+1))]
+	return edges
+
+
 
 def gen_attr(tasks,edges,ccr,comp_mu,comp_sigma,link_comm_sigma):
 	task_comp = np.clip(np.random.normal(comp_mu,comp_sigma,len(tasks)), EPSILON, comp_mu+10*comp_sigma)
@@ -151,19 +165,23 @@ def prepare_task_dag(config_yml,dag_path_plot):
 	#--- generate task graph ---
 
 	task_per_level,level_per_task = gen_task_nodes(config['depth'],config['total_num'],config['width_min'],config['width_max'])
+
+	
 	edges,adj_list_top_down,adj_list_down_top = gen_task_links(config['deg_mu'],config['deg_sigma'],task_per_level,level_per_task)
+	
 	task_comp,link_comm = gen_attr(np.arange(len(level_per_task)),edges,config['ccr'],config['comp_mu'],config['comp_sigma'],config['link_comm_sigma'])
 	edge_d = [(e[0],e[1],{'data':link_comm[i]}) for i,e in enumerate(edges)]
 	dag = nx.DiGraph()
 	dag.add_edges_from(edge_d)
 	for i,t in enumerate(task_comp):
-		dag.node[str(i)]['comp'] = t
+		dag.nodes[str(i)]['comp'] = t
 		##NOTE: actually it should not be called 'comp', but 'computation data amount'!!!
 	if dag_path_plot is not None:
 		plot_dag(dag,dag_path_plot)
-	#print(dag.graph)
+	# print(dag.graph)
 	
 	return dag
+
 
 
 def prepare_task_dag_multicast(config_yml,dag_path_plot):
@@ -172,9 +190,13 @@ def prepare_task_dag_multicast(config_yml,dag_path_plot):
 	#--- generate task graph ---
 
 	task_per_level,level_per_task = gen_task_nodes(config['depth'],config['total_num'],config['width_min'],config['width_max'])
-	edges,adj_list_top_down,adj_list_down_top = gen_task_links(config['deg_mu'],config['deg_sigma'],task_per_level,level_per_task)
+
+	if config['width_max'] > 1:
+		edges,adj_list_top_down,adj_list_down_top = gen_task_links(config['deg_mu'],config['deg_sigma'],task_per_level,level_per_task)
+	else:
+		edges = gen_chain_links(level_per_task)
 	task_comp,link_comm = gen_attr(np.arange(len(level_per_task)),edges,config['ccr'],config['comp_mu'],config['comp_sigma'],config['link_comm_sigma'])
-	
+
 	neighbors = {}
 	multicast = {}
 
@@ -184,7 +206,16 @@ def prepare_task_dag_multicast(config_yml,dag_path_plot):
 		else:
 			neighbors[edge[0]].append(edge[1])
 
+	# for node in neighbors:
+	# 	temp = random.uniform(0, 1)
+	# 	if (temp<0.5) & (len(neighbors[node])>1) :
+	# 		multicast[node] = 'true '
+	# 	else:
+	# 		multicast[node] = 'false '
 	for node in neighbors:
+		if node=='0' or len(neighbors[node])==1:
+			multicast[node] = 'true '
+			continue
 		temp = random.uniform(0, 1)
 		if (temp<0.5) & (len(neighbors[node])>1) :
 			multicast[node] = 'true '
@@ -213,7 +244,7 @@ def prepare_task_dag_multicast(config_yml,dag_path_plot):
 		##NOTE: actually it should not be called 'comp', but 'computation data amount'!!!
 	if dag_path_plot is not None:
 		plot_dag(dag,dag_path_plot)
-	#print(dag.graph)
+	
 	
 	return dag,neighbors,multicast
 
@@ -428,7 +459,7 @@ def generate_json(dag,app_path):
 
 if __name__ == '__main__':
 	args = parse_args()
-	dummy_app_path = 'dummy_app_multicast_10/'
+	dummy_app_path = 'dummy_chain/'
 	dummy_dag_plot = dummy_app_path + 'dag.png'
 	dummy_config_path = dummy_app_path + 'configuration.txt'
 	dummy_script_path = dummy_app_path + 'scripts/'
